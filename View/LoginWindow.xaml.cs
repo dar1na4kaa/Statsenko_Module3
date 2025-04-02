@@ -20,6 +20,8 @@ namespace Statsenko_Module3.View
     /// </summary>
     public partial class LoginWindow : Window
     {
+        private string userLogin = "";
+        private int attemptLogin = 0;
         public LoginWindow()
         {
             InitializeComponent();
@@ -29,19 +31,69 @@ namespace Statsenko_Module3.View
         {
             if (LoginTextBox.Text.Trim() != "" && PasswordTextBox.Password.Trim() != "")
             {
-                var selectedUser = UsersData.GetUsers().FirstOrDefault(user => user.Login == LoginTextBox.Text && user.Password == PasswordTextBox.Password);
+                var selectedUser = UsersData.GetUsers().FirstOrDefault(user => user.Login == LoginTextBox.Text);
                 if (selectedUser != null)
                 {
+                    if (selectedUser.Password == PasswordTextBox.Password)
+                    {
+                        if (selectedUser.Status != Model.UserStatus.Blocked)
+                        {
+                            if ((selectedUser.LastDateLogin >= DateTime.Now.AddMonths(-1) || selectedUser.LastDateLogin == null) && attemptLogin <3)
+                            {
+                                switch (selectedUser.Role)
+                                {
+                                    case Model.UserRole.Admin:
+
+                                        break;
+
+                                    case Model.UserRole.Client:
+                                        if(selectedUser.LastDateLogin == null)
+                                        {
+                                            ChangeNewUserPasswordWindow changeNewUserPasswordWindow = new ChangeNewUserPasswordWindow(selectedUser);
+                                            changeNewUserPasswordWindow.Show();
+                                            this.Close();
+                                        }
+                                        else
+                                        {
+                                            selectedUser.LastDateLogin = DateTime.Now;
+                                            ClientWindow clientWindow = new ClientWindow();
+                                            clientWindow.Show();
+                                            this.Close();
+                                        }
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                selectedUser.Status = Model.UserStatus.Blocked;
+                                MessageBox.Show("Вы заблокированы. Обратитесь к администратору", "Ошибка о блокировке", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Вы заблокированы. Обратитесь к администратору", "Ошибка о блокировке", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                    }
+                    else
+                    {
+                        if (userLogin != selectedUser.Login)
+                        {
+                            userLogin = selectedUser.Login;
+                            attemptLogin = 0;
+                        }
+                        attemptLogin++;
+                        MessageBox.Show($"Вы ввели неверный пароль. До блокировки аккаунта {3-attemptLogin} попыток", "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Вы ввели неверный логин или пароль", "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Вы ввели неверный логин", "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-
             }
             else
             {
                 MessageBox.Show("Введите логин или пароль", "Ошибка ввода данных", MessageBoxButton.OK, MessageBoxImage.Error);
+
             }
         }
     }

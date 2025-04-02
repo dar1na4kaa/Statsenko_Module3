@@ -43,7 +43,7 @@ namespace Statsenko_Module3.Data
                     FirstName = "Павел",
                     Login = "user2",
                     Password = "12345",
-                    Status = UserStatus.Active,
+                    Status = UserStatus.Blocked,
                     LastDateLogin = new DateTime(2025,3,2),
                     Role = UserRole.Client
                 });
@@ -52,7 +52,7 @@ namespace Statsenko_Module3.Data
                     Id = 3,
                     LastName = "Сидоров",
                     FirstName = "Павел",
-                    Login = "user2",
+                    Login = "user3",
                     Password = "12345",
                     Status = UserStatus.Active,
                     Role = UserRole.Client
