@@ -20,13 +20,15 @@ namespace Statsenko_Module3.Data
             try
             {
                 connection.Open();
+                int roleId = user.Role == UserRole.Admin ? 1 : 2;
+                int statusId = user.Status == UserStatus.Active ? 1 : 2;
                 var query = $"INSERT INTO Users Values ('{user.FirstName}'," +
                     $"'{user.LastName}'," +
                     $"'{user.Login}'," +
                     $"'{user.Password}'," +
-                    $"{user.Status}," +
+                    $"{statusId}," +
                     $"null," +
-                    $"{user.Role});";
+                    $"{roleId});";
                 var command = new SqlCommand(query, connection);
                 command.ExecuteNonQuery();
                 connection.Close();
