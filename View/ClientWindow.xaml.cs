@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Statsenko_Module3.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,17 @@ namespace Statsenko_Module3.View
     /// </summary>
     public partial class ClientWindow : Window
     {
-        public ClientWindow()
+        public ClientWindow(User user)
         {
             InitializeComponent();
+            this.DataContext = user;
+        }
+
+        private void Logout_Click(object sender, RoutedEventArgs e)
+        {
+            LoginWindow loginWindow = new LoginWindow();
+            loginWindow.Show();
+            this.Close();
         }
     }
 }

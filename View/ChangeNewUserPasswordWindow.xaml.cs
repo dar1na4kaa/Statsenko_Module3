@@ -41,7 +41,8 @@ namespace Statsenko_Module3.View
                         {
                             _selectedUser.Password = NewPasswordTextBox.Password;   
 
-                            ClientWindow clientWindow = new ClientWindow(); 
+                            ClientWindow clientWindow = new ClientWindow(_selectedUser);
+                            MessageBox.Show("Пароль успешно изменен", "Изменение пароля", MessageBoxButton.OK, MessageBoxImage.Information);
                             clientWindow.Show();
                             this.Close();
                         }

@@ -40,10 +40,16 @@ namespace Statsenko_Module3.View
                         {
                             if ((selectedUser.LastDateLogin >= DateTime.Now.AddMonths(-1) || selectedUser.LastDateLogin == null) && attemptLogin <3)
                             {
+                                MessageBox.Show("Вы успешно вошли", "Вход", MessageBoxButton.OK, MessageBoxImage.Information);
                                 switch (selectedUser.Role)
                                 {
-                                    case Model.UserRole.Admin:
 
+                                    case Model.UserRole.Admin:
+                                        selectedUser.LastDateLogin = DateTime.Now;
+
+                                        AdminWindow adminWindow = new AdminWindow();
+                                        adminWindow.Show(); 
+                                        this.Close();  
                                         break;
 
                                     case Model.UserRole.Client:
@@ -56,7 +62,8 @@ namespace Statsenko_Module3.View
                                         else
                                         {
                                             selectedUser.LastDateLogin = DateTime.Now;
-                                            ClientWindow clientWindow = new ClientWindow();
+
+                                            ClientWindow clientWindow = new ClientWindow(selectedUser);
                                             clientWindow.Show();
                                             this.Close();
                                         }
